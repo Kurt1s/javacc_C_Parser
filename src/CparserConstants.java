@@ -37,12 +37,12 @@ public interface CparserConstants {
     "<NUMBER>",
     "<LETTER>",
     "<CONSTANT>",
-    "\";\"",
     "\"(\"",
     "\")\"",
     "\"{\"",
     "\"}\"",
     "\"=\"",
+    "\";\"",
   };
 
 }

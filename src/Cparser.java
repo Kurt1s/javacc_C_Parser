@@ -43,17 +43,11 @@ public class Cparser implements CparserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case RETURNTYPE:
       funcDef();
-      jj_consume_token(11);
     {if (true) return 0;}
-      break;
-    case 11:
-      jj_consume_token(11);
-    {if (true) return 1;}
       break;
     default:
       jj_la1[0] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    {if (true) return 1;}
     }
     throw new Error("Missing return statement in function");
   }
@@ -61,12 +55,12 @@ public class Cparser implements CparserConstants {
   static final public void funcDef() throws ParseException {
     jj_consume_token(RETURNTYPE);
     funcName();
-    jj_consume_token(12);
+    jj_consume_token(11);
     parameterList();
+    jj_consume_token(12);
     jj_consume_token(13);
-    jj_consume_token(14);
     body();
-    jj_consume_token(15);
+    jj_consume_token(14);
   }
 
   static final public void funcName() throws ParseException {
@@ -96,8 +90,9 @@ public class Cparser implements CparserConstants {
   static final public void expr() throws ParseException {
     jj_consume_token(DATATYPE);
     jj_consume_token(LABEL);
-    jj_consume_token(16);
+    jj_consume_token(15);
     jj_consume_token(NUMBER);
+    jj_consume_token(16);
   }
 
   static private boolean jj_initialized_once = false;
@@ -116,7 +111,7 @@ public class Cparser implements CparserConstants {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x840,0x80,};
+      jj_la1_0 = new int[] {0x40,0x80,};
    }
 
   /** Constructor with InputStream. */

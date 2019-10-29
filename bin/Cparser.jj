@@ -91,11 +91,11 @@ TOKEN :
 int one_line() :
 {}
 {
-  funcDef() ";"
+  funcDef()
   {
     return 0;
   }
-| ";"
+|
   {
     return 1;
   }
@@ -129,5 +129,5 @@ void body() : /** SIMPLIFIED BODY EXPRESSION **/
 void expr() :
 {}
 {
-  (<DATATYPE > < LABEL > "=" < NUMBER >)
+  (<DATATYPE > < LABEL > "=" < NUMBER >) ";"
 }
