@@ -1,0 +1,170 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = true;
+}
+
+PARSER_BEGIN(Cparser)
+public class Cparser
+{
+  public static void main(String args []) throws ParseException
+  {
+    Cparser parser = new Cparser(System.in);
+	 System.out.print("Enter an expression like :\n" + 
+      "return_type function_name( parameter list ) {" 
+      + "\n\tbody of the function" 
+      + "\n }\n\nOR\n\n" 
+      + "int *ip = 5000;" 
+      + "\n\nOR\n\n" 
+      + "struct Books { " 
+      + "\n\tchar title[50];" 
+      + "\n\tchar author[50];" 
+      + "\n\tchar subject[100];" 
+      + "\n\tint book_id" 
+      + "\n};");
+    while (true)
+    {
+      System.out.println("\nReading from standard input...");
+     
+      try
+      {
+        switch (Cparser.one_line())
+        {
+          case 0 : 
+          System.out.println("OK.");
+          break;
+          case 1 : 
+          System.out.println("Goodbye.");
+          break;
+          default : 
+          break;
+        }
+      }
+      catch (Exception e)
+      {
+        System.out.println("NOK.");
+        System.out.println(e.getMessage());
+        Cparser.ReInit(System.in);
+      }
+      catch (Error e)
+      {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+        break;
+      }
+    }
+  }
+}
+
+PARSER_END(Cparser)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN :
+{
+  < STRUCT : "struct" >|
+  < DATATYPE :
+    (
+      "int"
+    | "char"
+    | "long"
+    | "double"
+    ) >
+| 
+  < RETURNTYPE :
+    (
+      < DATATYPE >
+    | "void"
+    ) >
+| < IDENTIFIER :
+    (< LETTER >)
+    (
+      < NUMBER >
+    | < LETTER >
+    )* >
+| < NUMBER : [ "0"-"9" ] >
+| < LETTER :
+    [ "a"-"z" ]
+  | [ "A"-"Z" ] >
+| < CONSTANT : (< NUMBER >)+ >
+}
+
+int one_line() :
+{}
+{
+  (
+    funcDef()
+  | structDef()
+  | pointerDef()
+  )
+  {
+    return 0;
+  }
+|
+  {
+    return 1;
+  }
+}
+
+void funcDef() :
+{}
+{
+  < RETURNTYPE > funcName() "(" parameterList() ")" "{" body() "}"
+}
+
+void funcName() :
+{}
+{
+  < IDENTIFIER >
+}
+
+void parameterList() : /** check this...**/
+{}
+{
+  (< DATATYPE >) (< IDENTIFIER >)*
+  //| (< DATATYPE > < IDENTIFIER > ",")* < DATATYPE > < IDENTIFIER >
+}
+
+void body() : /** SIMPLIFIED BODY EXPRESSION **/
+{}
+{
+  expr()
+}
+
+void expr() :
+{}
+{
+  (< DATATYPE > < IDENTIFIER > "=" < NUMBER >) ";"
+}
+
+void structDef() :
+{}
+{
+  < STRUCT >< IDENTIFIER > "{"
+  (dataList())* "};"
+}
+
+void dataList() :
+{}
+{
+ < DATATYPE > < IDENTIFIER > ";"
+}
+
+void pointerDef() :
+{}
+{
+  < DATATYPE > "*" < IDENTIFIER > "="
+  (
+    < CONSTANT >
+  | < IDENTIFIER >
+  )
+  ";"
+}
