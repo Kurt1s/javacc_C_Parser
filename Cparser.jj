@@ -23,7 +23,9 @@ public class Cparser
       + "\n\tchar author[50];" 
       + "\n\tchar subject[100];" 
       + "\n\tint book_id" 
-      + "\n};");
+      + "\n};"
+      + "\n\nOR\n\n"
+      + "void (*functionPtr)(int,int)");
     while (true)
     {
       System.out.println("\nReading from standard input...");
@@ -70,8 +72,11 @@ SKIP :
 
 TOKEN :
 {
-  < STRUCT : "struct" >|
-  < DATATYPE :
+  < ASTERISK : "*" >
+|   < OPAREN : "(" >
+|   < CPAREN : ")" > 
+|   < STRUCT : "struct" >
+|  < DATATYPE :
     (
       "int"
     | "char"
@@ -101,9 +106,12 @@ int one_line() :
 {}
 {
   (
-    funcDef()
+//    funcDef()
+//  | functionPointer()
+	functionPrefix()
   | structDef()
   | pointerDef()
+
   )
   {
     return 0;
@@ -114,11 +122,11 @@ int one_line() :
   }
 }
 
-void funcDef() :
-{}
-{
-  < RETURNTYPE > funcName() "(" parameterList() ")" "{" body() "}"
-}
+//void funcDef() :
+//{}
+//{
+//  < RETURNTYPE > funcName() <OPAREN> parameterList() <CPAREN> "{" body() "}"
+//}
 
 void funcName() :
 {}
@@ -161,10 +169,28 @@ void dataList() :
 void pointerDef() :
 {}
 {
-  < DATATYPE > "*" < IDENTIFIER > "="
+  < DATATYPE > < ASTERISK > < IDENTIFIER > "="
   (
     < CONSTANT >
   | < IDENTIFIER >
   )
   ";"
+}
+
+void functionPrefix() :
+{}
+{
+	< RETURNTYPE > (functionPointer() | functionDef() )
+}
+
+void functionPointer() :
+{}
+{
+	<OPAREN> < ASTERISK > < IDENTIFIER > <CPAREN> <OPAREN> < DATATYPE > ("," < DATATYPE >)* < CPAREN >
+}
+
+void functionDef() :
+{}
+{
+	funcName() <OPAREN> parameterList() <CPAREN> "{" body() "}"
 }
