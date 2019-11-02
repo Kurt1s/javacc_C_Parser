@@ -22,7 +22,8 @@ public class Cparser
       + "\n\tchar title[50];" 
       + "\n\tchar author[50];" 
       + "\n\tchar subject[100];" 
-      + "\n\tint book_id" 
+      + "\n\tint book_id"
+      + "\n\tvoid (*print)(int,int);"
       + "\n};"
       + "\n\nOR\n\n"
       + "void (*functionPtr)(int,int)");
@@ -122,26 +123,19 @@ int one_line() :
   }
 }
 
-//void funcDef() :
-//{}
-//{
-//  < RETURNTYPE > funcName() <OPAREN> parameterList() <CPAREN> "{" body() "}"
-//}
-
 void funcName() :
 {}
 {
   < IDENTIFIER >
 }
 
-void parameterList() : /** check this...**/
+void parameterList() :
 {}
 {
-  (< DATATYPE >) (< IDENTIFIER >)*
-  //| (< DATATYPE > < IDENTIFIER > ",")* < DATATYPE > < IDENTIFIER >
+  < DATATYPE ><IDENTIFIER > ("," < DATATYPE > < IDENTIFIER >)*
 }
 
-void body() : /** SIMPLIFIED BODY EXPRESSION **/
+void body() : /** NOTE : SIMPLIFIED BODY CONTAINS ONLY SIMPLE EXPRESSION **/
 {}
 {
   expr()
@@ -157,13 +151,14 @@ void structDef() :
 {}
 {
   < STRUCT >< IDENTIFIER > "{"
-  (dataList())* "};"
+  (dataList())* ";"
+  (< RETURNTYPE > functionPointer())* ";"     "};"
 }
 
 void dataList() :
 {}
 {
- < DATATYPE > < IDENTIFIER > ";"
+ < DATATYPE > < IDENTIFIER > ("[" < CONSTANT > "]")*
 }
 
 void pointerDef() :
@@ -180,7 +175,7 @@ void pointerDef() :
 void functionPrefix() :
 {}
 {
-	< RETURNTYPE > (functionPointer() | functionDef() )
+	< RETURNTYPE > (functionPointer() | functionDef() ) ";"
 }
 
 void functionPointer() :

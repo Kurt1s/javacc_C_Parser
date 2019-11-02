@@ -14,6 +14,7 @@ public class Cparser implements CparserConstants {
       + "\u005cn\u005ctchar author[50];"
       + "\u005cn\u005ctchar subject[100];"
       + "\u005cn\u005ctint book_id"
+      + "\u005cn\u005ctvoid (*print)(int,int);"
       + "\u005cn};"
       + "\u005cn\u005cnOR\u005cn\u005cn"
       + "void (*functionPtr)(int,int)");
@@ -79,27 +80,25 @@ public class Cparser implements CparserConstants {
     throw new Error("Missing return statement in function");
   }
 
-//void funcDef() :
-//{}
-//{
-//  < RETURNTYPE > funcName() <OPAREN> parameterList() <CPAREN> "{" body() "}"
-//}
   static final public void funcName() throws ParseException {
     jj_consume_token(IDENTIFIER);
   }
 
   static final public void parameterList() throws ParseException {
     jj_consume_token(DATATYPE);
+    jj_consume_token(IDENTIFIER);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case IDENTIFIER:
+      case 15:
         ;
         break;
       default:
         jj_la1[2] = jj_gen;
         break label_1;
       }
+      jj_consume_token(15);
+      jj_consume_token(DATATYPE);
       jj_consume_token(IDENTIFIER);
     }
   }
@@ -111,15 +110,15 @@ public class Cparser implements CparserConstants {
   static final public void expr() throws ParseException {
     jj_consume_token(DATATYPE);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(15);
-    jj_consume_token(NUMBER);
     jj_consume_token(16);
+    jj_consume_token(NUMBER);
+    jj_consume_token(17);
   }
 
   static final public void structDef() throws ParseException {
     jj_consume_token(STRUCT);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(17);
+    jj_consume_token(18);
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -132,20 +131,48 @@ public class Cparser implements CparserConstants {
       }
       dataList();
     }
-    jj_consume_token(18);
+    jj_consume_token(17);
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case RETURNTYPE:
+        ;
+        break;
+      default:
+        jj_la1[4] = jj_gen;
+        break label_3;
+      }
+      jj_consume_token(RETURNTYPE);
+      functionPointer();
+    }
+    jj_consume_token(17);
+    jj_consume_token(19);
   }
 
   static final public void dataList() throws ParseException {
     jj_consume_token(DATATYPE);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(16);
+    label_4:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 20:
+        ;
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        break label_4;
+      }
+      jj_consume_token(20);
+      jj_consume_token(CONSTANT);
+      jj_consume_token(21);
+    }
   }
 
   static final public void pointerDef() throws ParseException {
     jj_consume_token(DATATYPE);
     jj_consume_token(ASTERISK);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(15);
+    jj_consume_token(16);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSTANT:
       jj_consume_token(CONSTANT);
@@ -154,11 +181,11 @@ public class Cparser implements CparserConstants {
       jj_consume_token(IDENTIFIER);
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    jj_consume_token(16);
+    jj_consume_token(17);
   }
 
   static final public void functionPrefix() throws ParseException {
@@ -171,10 +198,11 @@ public class Cparser implements CparserConstants {
       functionDef();
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+    jj_consume_token(17);
   }
 
   static final public void functionPointer() throws ParseException {
@@ -184,17 +212,17 @@ public class Cparser implements CparserConstants {
     jj_consume_token(CPAREN);
     jj_consume_token(OPAREN);
     jj_consume_token(DATATYPE);
-    label_3:
+    label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 19:
+      case 15:
         ;
         break;
       default:
-        jj_la1[6] = jj_gen;
-        break label_3;
+        jj_la1[8] = jj_gen;
+        break label_5;
       }
-      jj_consume_token(19);
+      jj_consume_token(15);
       jj_consume_token(DATATYPE);
     }
     jj_consume_token(CPAREN);
@@ -205,9 +233,9 @@ public class Cparser implements CparserConstants {
     jj_consume_token(OPAREN);
     parameterList();
     jj_consume_token(CPAREN);
-    jj_consume_token(17);
+    jj_consume_token(18);
     body();
-    jj_consume_token(20);
+    jj_consume_token(22);
   }
 
   static private boolean jj_initialized_once = false;
@@ -220,13 +248,13 @@ public class Cparser implements CparserConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[7];
+  static final private int[] jj_la1 = new int[9];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x700,0x700,0x800,0x200,0x4800,0x840,0x80000,};
+      jj_la1_0 = new int[] {0x700,0x700,0x8000,0x200,0x400,0x100000,0x4800,0x840,0x8000,};
    }
 
   /** Constructor with InputStream. */
@@ -247,7 +275,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -261,7 +289,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -278,7 +306,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -288,7 +316,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -304,7 +332,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -313,7 +341,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 7; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -364,12 +392,12 @@ public class Cparser implements CparserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[21];
+    boolean[] la1tokens = new boolean[23];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 9; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -378,7 +406,7 @@ public class Cparser implements CparserConstants {
         }
       }
     }
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < 23; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
