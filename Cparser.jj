@@ -1,3 +1,33 @@
+/*
+ * This .jj file generates a parser for the programming language C.
+ *
+ * The grammar in EBNF form is as follows.
+ * < one line > -> < functionPrefix > | < structDef > | < pointerDef >
+ *
+ * < functionPrefix > -> < returntype > (< functionPointer > | < functionDef >) ";"
+ * < returntype > -> < datatype > | "void"
+ * < datatype > -> "int" | "char" | "long" | "double"
+ * < functionPointer > -> < oparen > < asterisk > < identifier > < cparen >
+ *                         < oparen > < datatype > ("," < datatype >)* < cparen >
+ * < oparen > -> "("
+ * < asterisk > -> "*"
+ * < identifier > -> < letter > (< number > | < letter >)*
+ * < letter > -> ["0"-"9"]
+ * < number > -> ["a"-"z"] | ["A"-"Z"]
+ * < cparen > -> ")"
+ * < functionDef > -> < funcName > < oparen > < parameterList > < cparen > "{" < body > " }"
+ * < funcName > -> < identifier >
+ * < parameterList > -> < datatype > < identifier > ("," < datatype > < identifier >)*
+ * < body > -> < expr >
+ * < expr > -> (< datatype > < identifier > "=" < number >) ";"
+ *
+ * < structDef > -> < struct > < identifier > "{" (< dataList >)* ";"
+ *                   ( < returntype > < functionPointer >)* ";" " }" ";"
+ * < dataList > -> < datatype > < identifier > ("[" < constant > "]")*
+ * < constant > -> (< number >)+
+ * < pointerDef > -> < datatype > < asterisk > < identifier > "=" (< constant > | < identifier >) ";"
+ */
+
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */
