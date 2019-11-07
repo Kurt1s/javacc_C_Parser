@@ -28,6 +28,25 @@
  * < pointerDef > -> < datatype > < asterisk > < identifier > "=" (< constant > | < identifier >) ";"
  */
 
+/*
+ * Some expressions that will work include:
+ *
+ * int *ip = ptr;
+ *
+ * struct 3DPoint {
+ *     double x;
+ *     double y;
+ * }
+ *
+ * Expressions that fail include:
+ *
+ * int func() {
+ *     ;
+ * }
+ *
+ * int *ip = ptr + 1;
+ */
+
 /**
  * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
  */
