@@ -1,4 +1,7 @@
 /*
+ * Lab 5 for CUS-1168
+ * by Kurtis Bassmann and Ryan Andres
+ * 
  * This .jj file generates a parser for the programming language C.
  *
  * The grammar in EBNF form is as follows.
