@@ -5,6 +5,7 @@
  * This .jj file generates a parser for the programming language C.
  *
  * The grammar in EBNF form is as follows.
+ * 
  * < one line > -> < functionPrefix > | < structDef > | < pointerDef >
  *
  * < functionPrefix > -> < returntype > (< functionPointer > | < functionDef >) ";"
