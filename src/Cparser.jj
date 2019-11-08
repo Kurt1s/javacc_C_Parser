@@ -79,13 +79,14 @@ public class Cparser
     + "\n};"
     + "\n\nOR------------------------------------------------------\n\n" 
     + "\n< data_type > \"*\" < pointer_name > \"=\" < value > \";\""
+    + "\n\nexample::"
     + "\nint *cp = ip;"
     + "\n\nOR------------------------------------------------------\n\n"
     + "\"struct\" < struct_name > \"{\" " 
     + "\n\t< variable_defintion_list >" 
     + "\n\t< function_pointer_list >" 
     + "\n\"}\"\";\"\n\n"
-    + "example::"
+    + "\nexample::"
     + "\nstruct Books { " 
     + "\n\tchar title[50];" 
     + "\n\tchar author[50];" 
@@ -96,7 +97,7 @@ public class Cparser
 
     + "\n\nOR------------------------------------------------------\n\n"
     + "< return_type > \"(\" \"*\" < function_name > \")\" \"(\" < parameter_list > \";\""
-    + "\nexamples:: void (*functionPtr)(int,int);"
+    + "\n\nexamples:: void (*functionPtr)(int,int);"
     + "\n\t long (*datePtr)(int, char[]);");
     while (true)
     {

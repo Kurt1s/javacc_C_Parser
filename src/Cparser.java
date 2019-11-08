@@ -20,13 +20,14 @@ public class Cparser implements CparserConstants {
     + "\u005cn};"
     + "\u005cn\u005cnOR------------------------------------------------------\u005cn\u005cn"
     + "\u005cn< data_type > \u005c"*\u005c" < pointer_name > \u005c"=\u005c" < value > \u005c";\u005c""
+    + "\u005cn\u005cnexample::"
     + "\u005cnint *cp = ip;"
     + "\u005cn\u005cnOR------------------------------------------------------\u005cn\u005cn"
     + "\u005c"struct\u005c" < struct_name > \u005c"{\u005c" "
     + "\u005cn\u005ct< variable_defintion_list >"
     + "\u005cn\u005ct< function_pointer_list >"
     + "\u005cn\u005c"}\u005c"\u005c";\u005c"\u005cn\u005cn"
-    + "example::"
+    + "\u005cnexample::"
     + "\u005cnstruct Books { "
     + "\u005cn\u005ctchar title[50];"
     + "\u005cn\u005ctchar author[50];"
@@ -37,7 +38,7 @@ public class Cparser implements CparserConstants {
 
     + "\u005cn\u005cnOR------------------------------------------------------\u005cn\u005cn"
     + "< return_type > \u005c"(\u005c" \u005c"*\u005c" < function_name > \u005c")\u005c" \u005c"(\u005c" < parameter_list > \u005c";\u005c""
-    + "\u005cnexamples:: void (*functionPtr)(int,int);"
+    + "\u005cn\u005cnexamples:: void (*functionPtr)(int,int);"
     + "\u005cn\u005ct long (*datePtr)(int, char[]);");
     while (true)
     {
