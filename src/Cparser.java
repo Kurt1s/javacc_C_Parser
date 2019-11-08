@@ -3,24 +3,45 @@ public class Cparser implements CparserConstants {
   public static void main(String args []) throws ParseException
   {
     Cparser parser = new Cparser(System.in);
-    System.out.print("Enter an expression like :\u005cn"
-//    + "return_type function_name( parameter list ) {" 
-//    + "\n\tbody of the function" 
-//    + "\n }\n\nOR\n\n" 
-    + "int *ip = 5000;"
-    + "\u005cn\u005cnOR\u005cn\u005cn"
-    + "struct Books { "
+    System.out.println("Welcome to the simple C parser...");
+    System.out.println("Accepted expressions are:"
+    + "\u005cn\u005ct1. Function Definition"
+    + "\u005cn\u005ct2. Function Pointer"
+    + "\u005cn\u005ct3. Struct Defintion"
+    + "\u005cn\u005ct4. Simple Pointer Instanciation");
+    System.out.print("\u005cnexamples...\u005cn\u005cn"
+    + "< return_type > <function_name >\u005c"(\u005c" < parameter list > \u005c")\u005c" {"
+    + "\u005cn\u005ct< body >"
+    + "\u005cn \u005c"}\u005c"\u005c";\u005c""
+    + "\u005cn\u005cnexample::"
+    + "\u005cnvoid add(int a, int b) {"
+    + "\u005cn\u005ct int y = a + b"
+    + "\u005cn\u005ct return y;"
+    + "\u005cn};"
+    + "\u005cn\u005cnOR------------------------------------------------------\u005cn\u005cn"
+    + "\u005cn< data_type > \u005c"*\u005c" < pointer_name > \u005c"=\u005c" < value > \u005c";\u005c""
+    + "\u005cnint *cp = ip;"
+    + "\u005cn\u005cnOR------------------------------------------------------\u005cn\u005cn"
+    + "\u005c"struct\u005c" < struct_name > \u005c"{\u005c" "
+    + "\u005cn\u005ct< variable_defintion_list >"
+    + "\u005cn\u005ct< function_pointer_list >"
+    + "\u005cn\u005c"}\u005c"\u005c";\u005c"\u005cn\u005cn"
+    + "example::"
+    + "\u005cnstruct Books { "
     + "\u005cn\u005ctchar title[50];"
     + "\u005cn\u005ctchar author[50];"
     + "\u005cn\u005ctchar subject[100];"
     + "\u005cn\u005ctint bookID;"
     + "\u005cn\u005ctvoid (*print)(int,int);"
-    + "\u005cn};"
-    + "\u005cn\u005cnOR\u005cn\u005cn"
-    + "void (*functionPtr)(int,int);");
+    + "\u005cn};\u005cn\u005cn"
+
+    + "\u005cn\u005cnOR------------------------------------------------------\u005cn\u005cn"
+    + "< return_type > \u005c"(\u005c" \u005c"*\u005c" < function_name > \u005c")\u005c" \u005c"(\u005c" < parameter_list > \u005c";\u005c""
+    + "\u005cnexamples:: void (*functionPtr)(int,int);"
+    + "\u005cn\u005ct long (*datePtr)(int, char[]);");
     while (true)
     {
-      System.out.println("\u005cnReading from standard input...");
+      System.out.println("\u005cn\u005cn\u005cnReading from standard input...");
       try
       {
         switch (Cparser.one_line())
@@ -56,11 +77,11 @@ public class Cparser implements CparserConstants {
     case DATATYPE:
     case RETURNTYPE:
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case RETURNTYPE:
-        functionPointer();
-        break;
       case STRUCT:
         structDef();
+        break;
+      case RETURNTYPE:
+        functionPrefix();
         break;
       case DATATYPE:
         pointerDef();
@@ -83,7 +104,7 @@ public class Cparser implements CparserConstants {
     jj_consume_token(DATATYPE);
     jj_consume_token(ASTERISK);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(15);
+    jj_consume_token(16);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case CONSTANT:
       jj_consume_token(CONSTANT);
@@ -96,7 +117,7 @@ public class Cparser implements CparserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    jj_consume_token(16);
+    jj_consume_token(17);
   }
 
   static final public void parameterList() throws ParseException {
@@ -105,14 +126,14 @@ public class Cparser implements CparserConstants {
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 17:
+      case 18:
         ;
         break;
       default:
         jj_la1[3] = jj_gen;
         break label_1;
       }
-      jj_consume_token(17);
+      jj_consume_token(18);
       jj_consume_token(DATATYPE);
       jj_consume_token(IDENTIFIER);
     }
@@ -120,20 +141,63 @@ public class Cparser implements CparserConstants {
 
   static final public void body() throws ParseException {
     expr();
+    jj_consume_token(RETURN);
+    jj_consume_token(IDENTIFIER);
+    jj_consume_token(17);
   }
 
   static final public void expr() throws ParseException {
     jj_consume_token(DATATYPE);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case DATATYPE:
+      simpleExpr();
+      break;
+    case IDENTIFIER:
+      additionExpr();
+      break;
+    default:
+      jj_la1[4] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void simpleExpr() throws ParseException {
+    jj_consume_token(DATATYPE);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(15);
-    jj_consume_token(NUMBER);
     jj_consume_token(16);
+    var();
+    jj_consume_token(17);
+  }
+
+  static final public void var() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case CONSTANT:
+      jj_consume_token(CONSTANT);
+      break;
+    case IDENTIFIER:
+      jj_consume_token(IDENTIFIER);
+      break;
+    default:
+      jj_la1[5] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  static final public void additionExpr() throws ParseException {
+    jj_consume_token(IDENTIFIER);
+    jj_consume_token(16);
+    var();
+    jj_consume_token(19);
+    var();
+    jj_consume_token(17);
   }
 
   static final public void structDef() throws ParseException {
     jj_consume_token(STRUCT);
     jj_consume_token(IDENTIFIER);
-    jj_consume_token(18);
+    jj_consume_token(20);
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -141,26 +205,27 @@ public class Cparser implements CparserConstants {
         ;
         break;
       default:
-        jj_la1[4] = jj_gen;
+        jj_la1[6] = jj_gen;
         break label_2;
       }
       structPropDef();
-      jj_consume_token(16);
+      jj_consume_token(17);
     }
     label_3:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case RETURNTYPE:
+      case OPAREN:
         ;
         break;
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[7] = jj_gen;
         break label_3;
       }
       functionPointer();
+      jj_consume_token(17);
     }
-    jj_consume_token(19);
-    jj_consume_token(16);
+    jj_consume_token(21);
+    jj_consume_token(17);
   }
 
   static final public void structPropDef() throws ParseException {
@@ -169,38 +234,37 @@ public class Cparser implements CparserConstants {
     label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 20:
+      case 22:
         ;
         break;
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[8] = jj_gen;
         break label_4;
       }
-      jj_consume_token(20);
+      jj_consume_token(22);
       jj_consume_token(CONSTANT);
-      jj_consume_token(21);
+      jj_consume_token(23);
     }
   }
 
   static final public void functionPrefix() throws ParseException {
     jj_consume_token(RETURNTYPE);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case RETURNTYPE:
-      functionPointer();
-      break;
     case IDENTIFIER:
       functionDef();
       break;
+    case OPAREN:
+      functionPointer();
+      break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    jj_consume_token(16);
+    jj_consume_token(17);
   }
 
   static final public void functionPointer() throws ParseException {
-    jj_consume_token(RETURNTYPE);
     jj_consume_token(OPAREN);
     jj_consume_token(ASTERISK);
     jj_consume_token(IDENTIFIER);
@@ -210,18 +274,17 @@ public class Cparser implements CparserConstants {
     label_5:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case 17:
+      case 18:
         ;
         break;
       default:
-        jj_la1[8] = jj_gen;
+        jj_la1[10] = jj_gen;
         break label_5;
       }
-      jj_consume_token(17);
+      jj_consume_token(18);
       jj_consume_token(DATATYPE);
     }
     jj_consume_token(CPAREN);
-    jj_consume_token(16);
   }
 
   static final public void functionDef() throws ParseException {
@@ -229,9 +292,9 @@ public class Cparser implements CparserConstants {
     jj_consume_token(OPAREN);
     parameterList();
     jj_consume_token(CPAREN);
-    jj_consume_token(18);
+    jj_consume_token(20);
     body();
-    jj_consume_token(19);
+    jj_consume_token(21);
   }
 
   static private boolean jj_initialized_once = false;
@@ -244,13 +307,13 @@ public class Cparser implements CparserConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[9];
+  static final private int[] jj_la1 = new int[11];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x700,0x700,0x4800,0x20000,0x200,0x400,0x100000,0xc00,0x20000,};
+      jj_la1_0 = new int[] {0xe00,0xe00,0x9000,0x40000,0x1400,0x9000,0x400,0x80,0x400000,0x1080,0x40000,};
    }
 
   /** Constructor with InputStream. */
@@ -271,7 +334,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -285,7 +348,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -302,7 +365,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -312,7 +375,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -328,7 +391,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -337,7 +400,7 @@ public class Cparser implements CparserConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -388,12 +451,12 @@ public class Cparser implements CparserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[22];
+    boolean[] la1tokens = new boolean[24];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 11; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -402,7 +465,7 @@ public class Cparser implements CparserConstants {
         }
       }
     }
-    for (int i = 0; i < 22; i++) {
+    for (int i = 0; i < 24; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

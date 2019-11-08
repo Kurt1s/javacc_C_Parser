@@ -62,24 +62,45 @@ public class Cparser
   public static void main(String args []) throws ParseException
   {
     Cparser parser = new Cparser(System.in);
-    System.out.print("Enter an expression like :\n"
-//    + "return_type function_name( parameter list ) {" 
-//    + "\n\tbody of the function" 
-//    + "\n }\n\nOR\n\n" 
-    + "int *ip = 5000;" 
-    + "\n\nOR\n\n" 
-    + "struct Books { " 
+    System.out.println("Welcome to the simple C parser...");
+    System.out.println("Accepted expressions are:"
+    + "\n\t1. Function Definition"
+    + "\n\t2. Function Pointer"
+    + "\n\t3. Struct Defintion"
+    + "\n\t4. Simple Pointer Instanciation");
+    System.out.print("\nexamples...\n\n"
+    + "< return_type > <function_name >\"(\" < parameter list > \")\" {" 
+    + "\n\t< body >" 
+    + "\n \"}\"\";\""
+    + "\n\nexample::"
+    + "\nvoid add(int a, int b) {"
+    + "\n\t int y = a + b"
+    + "\n\t return y;"
+    + "\n};"
+    + "\n\nOR------------------------------------------------------\n\n" 
+    + "\n< data_type > \"*\" < pointer_name > \"=\" < value > \";\""
+    + "\nint *cp = ip;"
+    + "\n\nOR------------------------------------------------------\n\n"
+    + "\"struct\" < struct_name > \"{\" " 
+    + "\n\t< variable_defintion_list >" 
+    + "\n\t< function_pointer_list >" 
+    + "\n\"}\"\";\"\n\n"
+    + "example::"
+    + "\nstruct Books { " 
     + "\n\tchar title[50];" 
     + "\n\tchar author[50];" 
     + "\n\tchar subject[100];" 
     + "\n\tint bookID;" 
     + "\n\tvoid (*print)(int,int);" 
-    + "\n};" 
-    + "\n\nOR\n\n" 
-    + "void (*functionPtr)(int,int);");
+    + "\n};\n\n"
+
+    + "\n\nOR------------------------------------------------------\n\n"
+    + "< return_type > \"(\" \"*\" < function_name > \")\" \"(\" < parameter_list > \";\""
+    + "\nexamples:: void (*functionPtr)(int,int);"
+    + "\n\t long (*datePtr)(int, char[]);");
     while (true)
     {
-      System.out.println("\nReading from standard input...");
+      System.out.println("\n\n\nReading from standard input...");
       try
       {
         switch (Cparser.one_line())
@@ -122,7 +143,8 @@ SKIP :
 
 TOKEN :
 {
-  < ASTERISK : "*" >
+  < RETURN : "return" >
+| < ASTERISK : "*" >
 | < OPAREN : "(" >
 | < CPAREN : ")" >
 | < STRUCT : "struct" >
@@ -156,11 +178,14 @@ int one_line() :
 {}
 {
   (
-  //  functionPrefix()
-  functionPointer()
+   //   functionDef()
+  //| 
+      structDef()
   |
-  structDef()
-  |
+	functionPrefix()
+  //functionPointer()
+  //|
+| 
   pointerDef()
   )
   
@@ -190,27 +215,49 @@ void parameterList() :
   < DATATYPE > < IDENTIFIER > ("," < DATATYPE > < IDENTIFIER >)*
 }
 
-void body() : /** NOTE : SIMPLIFIED BODY CONTAINS ONLY SIMPLE EXPRESSION **/
+void body() : /** NOTE : SIMPLIFIED BODY **/
 {}
 {
-  expr()
+//  (additionExpr() | simpleExpr())
+	expr()
+  < RETURN > < IDENTIFIER > ";"
 }
 
 void expr() :
 {}
 {
-  (< DATATYPE > < IDENTIFIER > "=" < NUMBER >) ";"
+  
+	< DATATYPE > (simpleExpr() | additionExpr())
+}
+
+void simpleExpr() :
+{}
+{
+  < DATATYPE > < IDENTIFIER > "=" var() ";"
+  
+}
+
+void var():
+{}
+{
+(< CONSTANT > | < IDENTIFIER >)
+}
+
+void additionExpr() :
+{}
+{
+	< IDENTIFIER > "=" var() "+" var() ";" 
 }
 
 void structDef() :
 {}
 {
-  < STRUCT > < IDENTIFIER > "{"
+  "struct" < IDENTIFIER > "{"
   (
     structPropDef() ";"
   )*
   (
-    functionPointer()
+    functionPointer() ";"
   )*
   "}" ";"
 }
@@ -226,8 +273,9 @@ void functionPrefix() :
 {
   < RETURNTYPE >
   (
-    functionPointer()
-  | functionDef()
+    functionDef()
+  |  functionPointer()
+  
   )
   ";"
 }
@@ -235,11 +283,11 @@ void functionPrefix() :
 void functionPointer() :
 {}
 {
-  < RETURNTYPE > < OPAREN > < ASTERISK > < IDENTIFIER > < CPAREN > < OPAREN > < DATATYPE > ("," < DATATYPE >)* < CPAREN > ";"
+< OPAREN > < ASTERISK > < IDENTIFIER > < CPAREN > < OPAREN > < DATATYPE > ("," < DATATYPE >)* < CPAREN > 
 }
 
 void functionDef() :
 {}
 {
-  < IDENTIFIER > < OPAREN > parameterList() < CPAREN > "{" body() "}"
+< IDENTIFIER > < OPAREN > parameterList() < CPAREN > "{" body() "}"
 }
