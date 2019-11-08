@@ -62,10 +62,10 @@ public class Cparser
   public static void main(String args []) throws ParseException
   {
     Cparser parser = new Cparser(System.in);
-    System.out.print("Enter an expression like :\n" + 
-    "return_type function_name( parameter list ) {" 
-    + "\n\tbody of the function" 
-    + "\n }\n\nOR\n\n" 
+    System.out.print("Enter an expression like :\n"
+//    + "return_type function_name( parameter list ) {" 
+//    + "\n\tbody of the function" 
+//    + "\n }\n\nOR\n\n" 
     + "int *ip = 5000;" 
     + "\n\nOR\n\n" 
     + "struct Books { " 
@@ -156,13 +156,14 @@ int one_line() :
 {}
 {
   (
-
-  functionPrefix()
-//  |
-//  structDef()
-//  |
-//  pointerDef()
+  //  functionPrefix()
+  functionPointer()
+  |
+  structDef()
+  |
+  pointerDef()
   )
+  
   {
     return 0;
   }
@@ -206,12 +207,10 @@ void structDef() :
 {
   < STRUCT > < IDENTIFIER > "{"
   (
-    structPropDef() 
-    ";"
-  )+
+    structPropDef() ";"
+  )*
   (
-    < RETURNTYPE > functionPointer() 
-    ";"
+    functionPointer()
   )*
   "}" ";"
 }
@@ -236,7 +235,7 @@ void functionPrefix() :
 void functionPointer() :
 {}
 {
-  < OPAREN > < ASTERISK > < IDENTIFIER > < CPAREN > < OPAREN > < DATATYPE > ("," < DATATYPE >)* < CPAREN >
+  < RETURNTYPE > < OPAREN > < ASTERISK > < IDENTIFIER > < CPAREN > < OPAREN > < DATATYPE > ("," < DATATYPE >)* < CPAREN > ";"
 }
 
 void functionDef() :
