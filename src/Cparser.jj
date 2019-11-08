@@ -1,6 +1,56 @@
-/**
- * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+/*
+ * Lab 5 for CUS-1168
+ * by Kurtis Bassmann and Ryan Andres
+ * 
+ * This .jj file generates a parser for the programming language C.
+ *
+ * The grammar in EBNF form is as follows.
+ * 
+ * < one line > -> < functionPrefix > | < structDef > | < pointerDef >
+ *
+ * < functionPrefix > -> < returntype > (< functionPointer > | < functionDef >) ";"
+ * < returntype > -> < datatype > | "void"
+ * < datatype > -> "int" | "char" | "long" | "double"
+ * < functionPointer > -> < oparen > < asterisk > < identifier > < cparen >
+ *                         < oparen > < datatype > ("," < datatype >)* < cparen >
+ * < oparen > -> "("
+ * < asterisk > -> "*"
+ * < identifier > -> < letter > (< number > | < letter >)*
+ * < letter > -> ["0"-"9"]
+ * < number > -> ["a"-"z"] | ["A"-"Z"]
+ * < cparen > -> ")"
+ * < functionDef > -> < funcName > < oparen > < parameterList > < cparen > "{" < body > " }"
+ * < funcName > -> < identifier >
+ * < parameterList > -> < datatype > < identifier > ("," < datatype > < identifier >)*
+ * < body > -> < expr >
+ * < expr > -> (< datatype > < identifier > "=" < number >) ";"
+ *
+ * < structDef > -> < struct > < identifier > "{" (< dataList >)* ";"
+ *                   ( < returntype > < functionPointer >)* ";" " }" ";"
+ * < dataList > -> < datatype > < identifier > ("[" < constant > "]")*
+ * < constant > -> (< number >)+
+ * < pointerDef > -> < datatype > < asterisk > < identifier > "=" (< constant > | < identifier >) ";"
  */
+
+/*
+ * Some expressions that will work include:
+ *
+ * int *ip = ptr;
+ *
+ * struct 3DPoint {
+ *     double x;
+ *     double y;
+ * }
+ *
+ * Expressions that fail include:
+ *
+ * int func() {
+ *     ;
+ * }
+ *
+ * int *ip = ptr + 1;
+ */
+
 options
 {
   static = true;
@@ -12,13 +62,24 @@ public class Cparser
   public static void main(String args []) throws ParseException
   {
     Cparser parser = new Cparser(System.in);
+    System.out.print("Enter an expression like :\n" + 
+    "return_type function_name( parameter list ) {" 
+    + "\n\tbody of the function" 
+    + "\n }\n\nOR\n\n" 
+    + "int *ip = 5000;" 
+    + "\n\nOR\n\n" 
+    + "struct Books { " 
+    + "\n\tchar title[50];" 
+    + "\n\tchar author[50];" 
+    + "\n\tchar subject[100];" 
+    + "\n\tint bookID;" 
+    + "\n\tvoid (*print)(int,int);" 
+    + "\n};" 
+    + "\n\nOR\n\n" 
+    + "void (*functionPtr)(int,int);");
     while (true)
     {
-      System.out.println("Reading from standard input...");
-      System.out.print("Enter an expression like :\n" + 
-      "return_type function_name( parameter list ) {" 
-      + "\n\tbody of the function" 
-      + "\n}");
+      System.out.println("\nReading from standard input...");
       try
       {
         switch (Cparser.one_line())
@@ -61,7 +122,11 @@ SKIP :
 
 TOKEN :
 {
-  < DATATYPE :
+  < ASTERISK : "*" >
+| < OPAREN : "(" >
+| < CPAREN : ")" >
+| < STRUCT : "struct" >
+| < DATATYPE :
     (
       "int"
     | "char"
@@ -74,7 +139,7 @@ TOKEN :
     | "void"
     ) >
 
-| < LABEL :
+| < IDENTIFIER :
     (< LETTER >)
     (
       < NUMBER >
@@ -85,13 +150,19 @@ TOKEN :
     [ "a"-"z" ]
   | [ "A"-"Z" ] >
 | < CONSTANT : (< NUMBER >)+ >
-  
 }
 
 int one_line() :
 {}
 {
-  funcDef()
+  (
+
+  functionPrefix()
+//  |
+//  structDef()
+//  |
+//  pointerDef()
+  )
   {
     return 0;
   }
@@ -101,26 +172,24 @@ int one_line() :
   }
 }
 
-void funcDef() :
+void pointerDef() :
 {}
 {
-  < RETURNTYPE > funcName() "(" parameterList() ")" "{" body() "}"
+  < DATATYPE > < ASTERISK > < IDENTIFIER > "="
+  (
+    < CONSTANT >
+  | < IDENTIFIER >
+  )
+  ";"
 }
 
-void funcName() :
+void parameterList() :
 {}
 {
-  < LABEL >
+  < DATATYPE > < IDENTIFIER > ("," < DATATYPE > < IDENTIFIER >)*
 }
 
-void parameterList() : /** check this...**/
-{}
-{
-  (< DATATYPE >) (< LABEL >)*
-  //| (< DATATYPE > < LABEL > ",")* < DATATYPE > < LABEL >
-}
-
-void body() : /** SIMPLIFIED BODY EXPRESSION **/
+void body() : /** NOTE : SIMPLIFIED BODY CONTAINS ONLY SIMPLE EXPRESSION **/
 {}
 {
   expr()
@@ -129,5 +198,49 @@ void body() : /** SIMPLIFIED BODY EXPRESSION **/
 void expr() :
 {}
 {
-  (<DATATYPE > < LABEL > "=" < NUMBER >) ";"
+  (< DATATYPE > < IDENTIFIER > "=" < NUMBER >) ";"
+}
+
+void structDef() :
+{}
+{
+  < STRUCT > < IDENTIFIER > "{"
+  (
+    structPropDef() 
+    ";"
+  )+
+  (
+    < RETURNTYPE > functionPointer() 
+    ";"
+  )*
+  "}" ";"
+}
+
+void structPropDef() :
+{}
+{
+  < DATATYPE > < IDENTIFIER > ("[" < CONSTANT > "]")*
+}
+
+void functionPrefix() :
+{}
+{
+  < RETURNTYPE >
+  (
+    functionPointer()
+  | functionDef()
+  )
+  ";"
+}
+
+void functionPointer() :
+{}
+{
+  < OPAREN > < ASTERISK > < IDENTIFIER > < CPAREN > < OPAREN > < DATATYPE > ("," < DATATYPE >)* < CPAREN >
+}
+
+void functionDef() :
+{}
+{
+  < IDENTIFIER > < OPAREN > parameterList() < CPAREN > "{" body() "}"
 }

@@ -9,17 +9,25 @@ public interface CparserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int DATATYPE = 5;
+  int ASTERISK = 5;
   /** RegularExpression Id. */
-  int RETURNTYPE = 6;
+  int OPAREN = 6;
   /** RegularExpression Id. */
-  int LABEL = 7;
+  int CPAREN = 7;
   /** RegularExpression Id. */
-  int NUMBER = 8;
+  int STRUCT = 8;
   /** RegularExpression Id. */
-  int LETTER = 9;
+  int DATATYPE = 9;
   /** RegularExpression Id. */
-  int CONSTANT = 10;
+  int RETURNTYPE = 10;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 11;
+  /** RegularExpression Id. */
+  int NUMBER = 12;
+  /** RegularExpression Id. */
+  int LETTER = 13;
+  /** RegularExpression Id. */
+  int CONSTANT = 14;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -31,18 +39,23 @@ public interface CparserConstants {
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
+    "\"*\"",
+    "\"(\"",
+    "\")\"",
+    "\"struct\"",
     "<DATATYPE>",
     "<RETURNTYPE>",
-    "<LABEL>",
+    "<IDENTIFIER>",
     "<NUMBER>",
     "<LETTER>",
     "<CONSTANT>",
-    "\"(\"",
-    "\")\"",
-    "\"{\"",
-    "\"}\"",
     "\"=\"",
     "\";\"",
+    "\",\"",
+    "\"{\"",
+    "\"}\"",
+    "\"[\"",
+    "\"]\"",
   };
 
 }
