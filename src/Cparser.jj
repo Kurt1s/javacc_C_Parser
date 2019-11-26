@@ -287,8 +287,9 @@ void functionPointer() :
 < OPAREN > < ASTERISK > < IDENTIFIER > < CPAREN > < OPAREN > < DATATYPE > ("," < DATATYPE >)* < CPAREN > 
 }
 
-void functionDef() :
+void functionDef() : // fix to handle no return for void
 {}
 {
 < IDENTIFIER > < OPAREN > parameterList() < CPAREN > "{" body() "}"
 }
+
